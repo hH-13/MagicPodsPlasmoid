@@ -1,0 +1,22 @@
+{
+  "KPlugin": {
+    "Id": "app.magicpods.plasmoid",
+    "Name": "MagicPods",
+    "Description": "Battery status and settings for Bluetooth headphones",
+    "Version": "1.0",
+    "License": "GPL-3.0-or-later",
+    "Category": "Utilities",
+    "Icon": "/icons/mp-logo-color.svg",
+    "Website": "https://magicpods.app",
+    "Authors": [
+      {
+        "Name": "Aleksandr Maslov",
+        "Email": "MagicPods@outlook.com"
+      }
+    ]
+  },
+  "KPackageStructure": "Plasma/Applet",
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-FormFactors": ["Planar", "Horizontal"],
+  "X-Plasma-ContainmentCategories": ["Desktop", "Panel"]
+}

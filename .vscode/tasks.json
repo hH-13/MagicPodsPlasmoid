@@ -1,0 +1,46 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "deploy",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-c",
+        "set -euo pipefail\nrsync -az --delete -e \"ssh -p ${config:deckport} ${config:deckkey}\" \"${workspaceFolder}/src/\" \"${config:deckuser}@${config:deckip}:~/.local/share/plasma/plasmoids/${config:plasmoidid}/\""
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "restart",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-c",
+        "set -euo pipefail\nssh -p ${config:deckport} ${config:deckkey} ${config:deckuser}@${config:deckip} \"systemctl --user restart plasma-plasmashell.service\""
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "deployrestart",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "deploy",
+        "restart"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

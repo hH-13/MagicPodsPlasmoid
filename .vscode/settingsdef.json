@@ -1,0 +1,7 @@
+{
+    "deckip": "steamdeck.local",
+    "deckport": "22",
+    "deckuser": "deck",
+    "deckkey": "-i ${env:HOME}/.ssh/id_rsa",
+    "plasmoidid": "app.magicpods.plasmoid"
+}
