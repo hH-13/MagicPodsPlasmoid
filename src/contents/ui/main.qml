@@ -33,6 +33,7 @@ PlasmoidItem {
     readonly property var toneVolumeData: capabilities?.toneVolume ?? null
     readonly property var volumeSwipeLengthData: capabilities?.volumeSwipeLength ?? null
     readonly property var endCallData: capabilities?.endCall ?? null
+    readonly property var bluetoothCodec: capabilities?.bluetoothCodec ?? null
     readonly property bool backendConnected: backend.socketState === WebSocket.Open
     property int selectedAnc: ancData?.selected ?? 0
     readonly property var ancModes: ({ OFF: 1, TRANSPARENCY: 2, ADAPTIVE: 4, WIND: 8, ANC: 16 })
@@ -413,7 +414,8 @@ PlasmoidItem {
                                       (root.pressSpeedData !== null) ||
                                       (root.toneVolumeData !== null) ||
                                       (root.volumeSwipeLengthData !== null) ||
-                                      (root.endCallData !== null))
+                                      (root.endCallData !== null) ||
+                                      (root.bluetoothCodec !== null))
 
                             Kirigami.Heading {
                                 level: 1
@@ -734,6 +736,48 @@ PlasmoidItem {
                                     popup.x: width - popup.width
                                     }
                                 }
+                            
+                            // bluetooth codec
+                            RowLayout {
+                                visible: root.bluetoothCodec !== null
+                                width: parent.width
+                                spacing: Kirigami.Units.mediumSpacing
+                                PlasmaComponents.Label {
+                                    text: Local.Texts.bluetooth_codec
+                                    Layout.fillWidth: true
+                                    Layout.alignment: Qt.AlignVCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                    wrapMode: Text.WordWrap
+                                }
+                                PlasmaComponents.ComboBox {
+                                    implicitWidth: Kirigami.Units.gridUnit * 10
+                                    model: (root.bluetoothCodec?.options ?? []).map(function(option) {
+                                        return option[0]
+                                    })
+                                    currentIndex: {
+                                        var options = root.bluetoothCodec?.options || []
+                                        for (var i = 0; i < options.length; i++) {
+                                            if (options[i][0] === root.bluetoothCodec.selected) {
+                                                return i
+                                            }
+                                        }
+                                        return -1
+                                    }
+                                    enabled: !(root.bluetoothCodec?.readonly ?? true)
+                                    Layout.alignment: Qt.AlignVCenter
+                                    popup.width: Math.max(width, popup.implicitWidth)
+                                    popup.x: width - popup.width
+                                    onCurrentIndexChanged: {
+                                        if (root.bluetoothCodec && currentIndex >= 0) {
+                                            var options = root.bluetoothCodec.options || []
+                                            if (options[currentIndex]) {
+                                                root.bluetoothCodec.selected = options[currentIndex][0]
+                                                backend.setCapability("bluetoothCodec", root.currentAddress(), options[currentIndex][0])
+                                            }
+                                        }
+                                    }
+                                }
+                            }
 
                             Item {
                                 Layout.fillWidth: true

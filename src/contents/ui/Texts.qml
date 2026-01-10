@@ -71,6 +71,8 @@ QtObject {
     readonly property string end_call_once: i18n("Press once")
     readonly property string mute_unmute: i18n("Mute and unmute")
 
+    readonly property string bluetooth_codec: i18n("Bluetooth codec")
+
     //slider
     readonly property string tone_volume: i18n("Tone volume")
 }
