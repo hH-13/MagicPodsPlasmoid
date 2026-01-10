@@ -14,7 +14,7 @@ PlasmoidItem {
     id: root
     property var infoData: ({})
     property var btAdapterData: ({})
-    property var headphonesData: []    
+    property var headphonesData: []
     readonly property var sortedHeadphones: hasHeadphones
         ? headphonesData.slice().sort(function(a, b) { return (a.name || "").localeCompare(b.name || ""); })
         : []
@@ -178,7 +178,7 @@ PlasmoidItem {
                             text: Local.Texts.menu_donate
                             onTriggered: Qt.openUrlExternally("https://magicpods.app/donate")
                         }
-                    }                    
+                    }
 
                     PlasmaComponents.ToolButton {
                         id: pinButton
@@ -244,7 +244,7 @@ PlasmoidItem {
                             Layout.fillHeight: true
 
                             PlasmaComponents.Label {
-                                anchors.centerIn: parent                                
+                                anchors.centerIn: parent
                                 width: parent.width - Kirigami.Units.gridUnit * 2
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -733,7 +733,7 @@ PlasmoidItem {
                                     popup.width: Math.max(width, popup.implicitWidth)
                                     popup.x: width - popup.width
                                     }
-                                }                            
+                                }
 
                             Item {
                                 Layout.fillWidth: true
@@ -861,8 +861,6 @@ PlasmoidItem {
                     Layout.alignment: Qt.AlignHCenter
                     Layout.topMargin: Kirigami.Units.largeSpacing
                     onClicked: {
-                        backend.allowReconnect = true
-                        backend.reconnectAttempts = backend.maxAttempts
                         backend.connectSocket()
                     }
                 }

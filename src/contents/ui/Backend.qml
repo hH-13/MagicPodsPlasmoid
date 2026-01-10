@@ -23,6 +23,8 @@ Item {
 
     function connectSocket() {
         reconnectAttempts = maxAttempts
+        allowReconnect = true
+        socket.active = false
         socket.active = true
     }
 
