@@ -3,7 +3,7 @@
     "Id": "app.magicpods.plasmoid",
     "Name": "MagicPods",
     "Description": "Battery status and settings for Bluetooth headphones",
-    "Version": "1.0.0",
+    "Version": "1.0.1",
     "License": "GPL-3.0-or-later",
     "Category": "Utilities",
     "Icon": "/icons/mp-logo-color.svg",
