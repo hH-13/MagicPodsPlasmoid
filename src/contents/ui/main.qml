@@ -38,6 +38,22 @@ PlasmoidItem {
     property int selectedAnc: ancData?.selected ?? 0
     readonly property var ancModes: ({ OFF: 1, TRANSPARENCY: 2, ADAPTIVE: 4, WIND: 8, ANC: 16 })
     function currentAddress() { return infoData?.address }
+    function ancModeName(mode) {
+        switch (mode) {
+        case ancModes.OFF:
+            return Local.Texts.anc_off;
+        case ancModes.TRANSPARENCY:
+            return Local.Texts.anc_tra;
+        case ancModes.ADAPTIVE:
+            return Local.Texts.anc_adaptive;
+        case ancModes.WIND:
+            return Local.Texts.anc_wind;
+        case ancModes.ANC:
+            return Local.Texts.anc_anc;
+        default:
+            return "";
+        }
+    }
 
 
 
@@ -84,8 +100,8 @@ PlasmoidItem {
         if (batteryAvailable(batteryData?.case?.status)) parts.push("%1: %2%".arg(Local.Texts.battery_case).arg(batteryData.case.battery ?? 0))
         return parts.length ? parts.join(" ") : Local.Texts.disconnected
     }
-    toolTipMainText: Plasmoid.title && Plasmoid.title.length ? Plasmoid.title : qsTr("MagicPods")
-    toolTipSubText: trayTooltip
+    toolTipMainText: hasInfo && infoData.name ? infoData.name : (Plasmoid.title && Plasmoid.title.length ? Plasmoid.title : qsTr("MagicPods"))
+    toolTipSubText: hasInfo ? trayTooltip + (ancModeName(selectedAnc).length ? " · " + ancModeName(selectedAnc) : "") : trayTooltip
     toolTipTextFormat: Text.PlainText
 
 
@@ -126,7 +142,7 @@ PlasmoidItem {
         Layout.minimumHeight: Kirigami.Units.gridUnit * 24
         Layout.maximumWidth: Kirigami.Units.gridUnit * 80
         Layout.maximumHeight: Kirigami.Units.gridUnit * 40
-        property int currentTab: 0
+        // property int currentTab: 0
 
         header: PlasmaExtras.PlasmoidHeading {
             rightPadding: -1
@@ -203,30 +219,31 @@ PlasmoidItem {
                     }
                 }
 
-                PC3.TabBar {
-                    id: tabsHeader
-                    Layout.fillWidth: true
-                    currentIndex: dialog.currentTab
-                    onCurrentIndexChanged: dialog.currentTab = currentIndex
+                // PC3.TabBar {
+                //     id: tabsHeader
+                //     Layout.fillWidth: true
+                //     currentIndex: dialog.currentTab
+                //     onCurrentIndexChanged: dialog.currentTab = currentIndex
 
-                    PC3.TabButton { text: Local.Texts.info }
-                    PC3.TabButton { text: Local.Texts.headphones }
-                }
+                //     PC3.TabButton { text: Local.Texts.info }
+                //     PC3.TabButton { text: Local.Texts.headphones }
+                // }
             }
         }
 
-        contentItem: ColumnLayout {
+        // contentItem: ColumnLayout {
+        contentItem: StackLayout {
             id: contentLayout
             spacing: Kirigami.Units.mediumSpacing
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.topMargin: Kirigami.Units.largeSpacing
 
-            StackLayout {
+            ColumnLayout {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignTop
-                currentIndex: dialog.currentTab
+                // currentIndex: dialog.currentTab
                 visible: root.backendConnected
 
                 PC3.ScrollView {
@@ -752,7 +769,7 @@ PlasmoidItem {
                                 PlasmaComponents.ComboBox {
                                     implicitWidth: Kirigami.Units.gridUnit * 10
                                     model: (root.bluetoothCodec?.options ?? []).map(function(option) {
-                                        return option[0]
+                                        return option.length > 1 && option[1] !== undefined ? option[1] : option[0]
                                     })
                                     currentIndex: {
                                         var options = root.bluetoothCodec?.options || []
@@ -788,90 +805,90 @@ PlasmoidItem {
                     }
                 }
 
-                PC3.ScrollView {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    contentWidth: availableWidth
-                    clip: true
+                // PC3.ScrollView {
+                //     Layout.fillWidth: true
+                //     Layout.fillHeight: true
+                //     contentWidth: availableWidth
+                //     clip: true
 
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: Kirigami.Units.largeSpacing
-                        spacing: Kirigami.Units.smallSpacing
+                //     ColumnLayout {
+                //         anchors.fill: parent
+                //         anchors.margins: Kirigami.Units.largeSpacing
+                //         spacing: Kirigami.Units.smallSpacing
 
-                        RowLayout {
-                            width: parent.width
-                            spacing: Kirigami.Units.mediumSpacing
-                            Layout.topMargin: Kirigami.Units.largeSpacing
-                            PlasmaComponents.Label {
-                                text: Local.Texts.bluetooth
-                                Layout.fillWidth: true
-                                Layout.alignment: Qt.AlignVCenter
-                                verticalAlignment: Text.AlignVCenter
-                            }
+                //         RowLayout {
+                //             width: parent.width
+                //             spacing: Kirigami.Units.mediumSpacing
+                //             Layout.topMargin: Kirigami.Units.largeSpacing
+                //             PlasmaComponents.Label {
+                //                 text: Local.Texts.bluetooth
+                //                 Layout.fillWidth: true
+                //                 Layout.alignment: Qt.AlignVCenter
+                //                 verticalAlignment: Text.AlignVCenter
+                //             }
 
-                            PlasmaComponents.Switch {
-                                checked: root.btAdapterData.enabled
-                                onToggled: {
-                                    root.btAdapterData.enabled = checked
-                                    if (checked) backend.enableDefaultBluetoothAdapter()
-                                    else backend.disableDefaultBluetoothAdapter()
-                                }
-                            }
-                        }
+                //             PlasmaComponents.Switch {
+                //                 checked: root.btAdapterData.enabled
+                //                 onToggled: {
+                //                     root.btAdapterData.enabled = checked
+                //                     if (checked) backend.enableDefaultBluetoothAdapter()
+                //                     else backend.disableDefaultBluetoothAdapter()
+                //                 }
+                //             }
+                //         }
 
-                        ColumnLayout {
-                            spacing: Kirigami.Units.largeSpacing
+                //         ColumnLayout {
+                //             spacing: Kirigami.Units.largeSpacing
 
-                            Kirigami.Heading {
-                                level: 1
-                                text: Local.Texts.headphones
-                                Layout.topMargin: Kirigami.Units.largeSpacing * 3
-                                font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.3
-                            }
+                //             Kirigami.Heading {
+                //                 level: 1
+                //                 text: Local.Texts.headphones
+                //                 Layout.topMargin: Kirigami.Units.largeSpacing * 3
+                //                 font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.3
+                //             }
 
-                            PlasmaComponents.Label {
-                                        text: Local.Texts.headphones_empty
-                                        Layout.fillWidth: true
-                                        Layout.alignment: Qt.AlignVCenter
-                                        verticalAlignment: Text.AlignVCenter
-                                        visible: !hasHeadphones
-                            }
+                //             PlasmaComponents.Label {
+                //                         text: Local.Texts.headphones_empty
+                //                         Layout.fillWidth: true
+                //                         Layout.alignment: Qt.AlignVCenter
+                //                         verticalAlignment: Text.AlignVCenter
+                //                         visible: !hasHeadphones
+                //             }
 
-                            Repeater {
-                                model: root.sortedHeadphones
-                                delegate: RowLayout {
-                                    width: parent ? parent.width : undefined
-                                    spacing: Kirigami.Units.mediumSpacing
-                                    Layout.fillWidth: true
+                //             Repeater {
+                //                 model: root.sortedHeadphones
+                //                 delegate: RowLayout {
+                //                     width: parent ? parent.width : undefined
+                //                     spacing: Kirigami.Units.mediumSpacing
+                //                     Layout.fillWidth: true
 
-                                    PlasmaComponents.Label {
-                                        text: modelData.name
-                                        Layout.fillWidth: true
-                                        Layout.alignment: Qt.AlignVCenter
-                                        verticalAlignment: Text.AlignVCenter
-                                    }
+                //                     PlasmaComponents.Label {
+                //                         text: modelData.name
+                //                         Layout.fillWidth: true
+                //                         Layout.alignment: Qt.AlignVCenter
+                //                         verticalAlignment: Text.AlignVCenter
+                //                     }
 
-                                    PlasmaComponents.Switch {
-                                        checked: modelData.connected
-                                        onToggled: {
-                                            modelData.connected = checked
-                                            if (modelData.address) {
-                                                if (checked) backend.connectDevice(modelData.address)
-                                                else backend.disconnectDevice(modelData.address)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Item {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: Kirigami.Units.largeSpacing
-                        }
-                    }
+                //                     PlasmaComponents.Switch {
+                //                         checked: modelData.connected
+                //                         onToggled: {
+                //                             modelData.connected = checked
+                //                             if (modelData.address) {
+                //                                 if (checked) backend.connectDevice(modelData.address)
+                //                                 else backend.disconnectDevice(modelData.address)
+                //                             }
+                //                         }
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //         Item {
+                //             Layout.fillWidth: true
+                //             Layout.preferredHeight: Kirigami.Units.largeSpacing
+                //         }
+                //     }
 
-                }
+                // }
             }
         }
         Item {

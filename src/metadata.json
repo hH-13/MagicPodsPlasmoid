@@ -1,17 +1,21 @@
 {
   "KPlugin": {
-    "Id": "app.magicpods.plasmoid",
-    "Name": "MagicPods",
+    "Id": "hh.magicpods.plasmoid",
+    "Name": "hhMagicPods",
     "Description": "Battery status and settings for Bluetooth headphones",
-    "Version": "1.0.1",
+    "Version": "1.0.1.1",
     "License": "GPL-3.0-or-later",
     "Category": "Utilities",
     "Icon": "/icons/mp-logo-color.svg",
-    "Website": "https://magicpods.app",
+    "Website": "https://github.com/hH-13/MagicPodsPlasmoid",
     "Authors": [
       {
         "Name": "Aleksandr Maslov",
         "Email": "MagicPods@outlook.com"
+      },
+      {
+        "Name": "hH-13",
+        "Email": "13_hH@github"
       }
     ]
   },
