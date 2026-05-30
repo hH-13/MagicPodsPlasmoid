@@ -786,44 +786,21 @@ PlasmoidItem {
                             
                             // bluetooth codec
                             RowLayout {
-                                visible: root.bluetoothCodec !== null
-                                width: parent.width
-                                spacing: Kirigami.Units.mediumSpacing
-                                PlasmaComponents.Label {
-                                    text: Local.Texts.bluetooth_codec
-                                    Layout.fillWidth: true
-                                    Layout.alignment: Qt.AlignVCenter
-                                    verticalAlignment: Text.AlignVCenter
-                                    wrapMode: Text.WordWrap
-                                }
-                                PlasmaComponents.ComboBox {
-                                    implicitWidth: Kirigami.Units.gridUnit * 10
-                                    model: (root.bluetoothCodec?.options ?? []).map(function(option) {
-                                        return option.length > 1 && option[1] !== undefined ? option[1] : option[0]
-                                    })
-                                    currentIndex: {
-                                        var options = root.bluetoothCodec?.options || []
-                                        for (var i = 0; i < options.length; i++) {
-                                            if (options[i][0] === root.bluetoothCodec.selected) {
-                                                return i
-                                            }
-                                        }
-                                        return -1
+                                    visible: root.bluetoothCodec !== null
+                                    width: parent.width
+                                    spacing: Kirigami.Units.mediumSpacing
+                                    PlasmaComponents.Label {
+                                        text: Local.Texts.bluetooth_codec
+                                        Layout.fillWidth: true
+                                        Layout.alignment: Qt.AlignVCenter
+                                        verticalAlignment: Text.AlignVCenter
+                                        wrapMode: Text.WordWrap
                                     }
-                                    enabled: !(root.bluetoothCodec?.readonly ?? true)
-                                    Layout.alignment: Qt.AlignVCenter
-                                    popup.width: Math.max(width, popup.implicitWidth)
-                                    popup.x: width - popup.width
-                                    onCurrentIndexChanged: {
-                                        if (root.bluetoothCodec && currentIndex >= 0) {
-                                            var options = root.bluetoothCodec.options || []
-                                            if (options[currentIndex]) {
-                                                root.bluetoothCodec.selected = options[currentIndex][0]
-                                                backend.setCapability("bluetoothCodec", root.currentAddress(), options[currentIndex][0])
-                                            }
-                                        }
+                                    PlasmaComponents.Label {
+                                        text: root.bluetoothCodec?.selected || ""
+                                        Layout.alignment: Qt.AlignVCenter
+                                        horizontalAlignment: Text.AlignRight
                                     }
-                                }
                             }
 
                             Item {
