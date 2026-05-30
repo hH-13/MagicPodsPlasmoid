@@ -38,6 +38,32 @@ PlasmoidItem {
     property int selectedAnc: ancData?.selected ?? 0
     readonly property var ancModes: ({ OFF: 1, TRANSPARENCY: 2, ADAPTIVE: 4, WIND: 8, ANC: 16 })
     function currentAddress() { return infoData?.address }
+    function resetInfoData() {
+        root.infoData = {}
+        root.selectedAnc = 0
+    }
+    function mergeObjects(target, source) {
+        if (!source)
+            return target;
+        if (!target || typeof target !== "object")
+            target = {};
+        var result = {};
+        for (var key in target) {
+            if (target.hasOwnProperty(key))
+                result[key] = target[key];
+        }
+        for (var key in source) {
+            if (!source.hasOwnProperty(key))
+                continue;
+            var value = source[key];
+            if (value && typeof value === "object" && !Array.isArray(value) && result[key] && typeof result[key] === "object" && !Array.isArray(result[key])) {
+                result[key] = mergeObjects(result[key], value);
+            } else {
+                result[key] = value;
+            }
+        }
+        return result;
+    }
     function ancModeName(mode) {
         switch (mode) {
         case ancModes.OFF:
@@ -64,15 +90,20 @@ PlasmoidItem {
 
             //json = MockData.data2
 
-            if (json?.info) {
-                root.infoData = json.info
-                root.selectedAnc = json.info?.capabilities?.anc?.selected ?? root.selectedAnc
+            if (json && json.hasOwnProperty("info")) {
+                if (!json.info || (typeof json.info === "object" && Object.keys(json.info).length === 0) || json.info.connected === false || json.info.isConnected === false) {
+                    root.resetInfoData();
+                } else {
+                    root.infoData = mergeObjects(root.infoData, json.info);
+                    root.selectedAnc = root.infoData?.capabilities?.anc?.selected ?? root.selectedAnc;
+                }
             }
             if (json?.defaultbluetooth) {
                 root.btAdapterData = json.defaultbluetooth
             }
             if (json?.headphones) {
                 root.headphonesData = json.headphones
+                if (Array.isArray(json.headphones) && json.headphones.length === 0) { root.resetInfoData() }
             }
         }
     }
@@ -231,8 +262,7 @@ PlasmoidItem {
             }
         }
 
-        // contentItem: ColumnLayout {
-        contentItem: StackLayout {
+        contentItem: ColumnLayout {
             id: contentLayout
             spacing: Kirigami.Units.mediumSpacing
             Layout.fillWidth: true
