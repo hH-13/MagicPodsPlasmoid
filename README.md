@@ -2,6 +2,8 @@
 
 A KDE 6 widget that allows you to control AirPods, Beats, and Galaxy Buds headphones directly from the panel.
 
+> :warning: **This version removes some functionality and adds some cosmetic/stability fixes**: Removes the headphones tab and the codec selection option, makes the hover tooltip more informative, and adds some stability improvements to (try and) ensure consistent behaviour across reconnects.
+
 ![](./docs/images/screenshot-1.png)
 
 ## 🎨 Features
