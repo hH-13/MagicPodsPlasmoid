@@ -1,7 +1,7 @@
 {
   "KPlugin": {
     "Id": "hh.magicpods.plasmoid",
-    "Name": "hhMagicPods",
+    "Name": "~hhMagicPods",
     "Description": "Battery status and settings for Bluetooth headphones",
     "Version": "1.0.2",
     "License": "GPL-3.0-or-later",
