@@ -35,6 +35,7 @@ PlasmoidItem {
     readonly property var endCallData: capabilities?.endCall ?? null
     readonly property var bluetoothCodec: capabilities?.bluetoothCodec ?? null
     readonly property bool backendConnected: backend.socketState === WebSocket.Open
+    readonly property bool hasConnectedDevice: backendConnected && hasInfo
     property int selectedAnc: ancData?.selected ?? 0
     readonly property var ancModes: ({ OFF: 1, TRANSPARENCY: 2, ADAPTIVE: 4, WIND: 8, ANC: 16 })
     function currentAddress() { return infoData?.address }
@@ -134,6 +135,7 @@ PlasmoidItem {
     toolTipMainText: hasInfo && infoData.name ? infoData.name : (Plasmoid.title && Plasmoid.title.length ? Plasmoid.title : qsTr("MagicPods"))
     toolTipSubText: hasInfo ? trayTooltip + (ancModeName(selectedAnc).length ? " · " + ancModeName(selectedAnc) : "") : trayTooltip
     toolTipTextFormat: Text.PlainText
+    Plasmoid.status: hasConnectedDevice ? PlasmaCore.Types.ActiveStatus : PlasmaCore.Types.PassiveStatus
 
 
     compactRepresentation: MouseArea {
